@@ -3,10 +3,12 @@ Feature: Feature
   @jira(PC-1) @PC-1
   Scenario: Passed Test
     When passed step
+    And passed step
 
   @jira(PC-2) @PC-2
   Scenario: Failed Test
-    When failed step
+    When passed step
+    And failed step
 
   @jira(PC-3) @PC-3
   Scenario Outline: Passed Outline
@@ -38,3 +40,8 @@ Feature: Feature
   @jira(PC-5) @PC-5
   Scenario: Test passed after retry
     When step passed after retry
+
+  @jira(PC-6) @PC-6
+  Scenario: Test with an undefined step
+    When passed step
+    And undefined step

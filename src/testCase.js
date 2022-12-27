@@ -4,8 +4,7 @@ class TestCase {
     }
 
     getStatus() {
-        const isFailed = Object.values(this.testResult.stepResults).some(step => step.status !== 'PASSED');
-        return isFailed ? 'FAIL' : 'PASS';
+        return this.testResult.worstTestStepResult.status === 'PASSED' ? 'PASS' : 'FAIL';
     }
 
     getJiraId(regexp) {
