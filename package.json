@@ -1,0 +1,30 @@
+{
+  "name": "jira-formatter",
+  "version": "1.0.0",
+  "description": "jira formatter for cucumber framework",
+  "main": "src/formatter.js",
+  "scripts": {
+    "test": "cucumber-js --config test/cucumber.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VolhaValasevich/jira-formatter.git"
+  },
+  "keywords": [
+    "cucumber",
+    "formatter"
+  ],
+  "author": "Volha Valasevich",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/VolhaValasevich/jira-formatter/issues"
+  },
+  "homepage": "https://github.com/VolhaValasevich/jira-formatter#readme",
+  "dependencies": {
+    "axios": "^1.2.1",
+    "normalize-url": "^8.0.0"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^8.9.1"
+  }
+}
