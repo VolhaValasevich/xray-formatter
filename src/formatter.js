@@ -38,10 +38,14 @@ class JiraFormatter extends Formatter {
 			if (test.isOutline()) {
 				result.examples = [status];
 			}
-			if (this.execution) {
-				await this.jiraService.uploadExecutionResults(this.execution, [result]);
-			}
 			this.results.push(result);
+			if (this.execution) {
+				const results = await this.jiraService.getAllTestsFromExecution(this.execution);
+				const existingResult = results.find(item => item.key === testKey);
+				if (!existingResult || existingResult.status !== 'FAIL') {
+					await this.jiraService.uploadExecutionResults(this.execution, [result]);
+				}
+			}
 		}
 	}
 
