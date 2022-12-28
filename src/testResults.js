@@ -8,9 +8,8 @@ class TestResults {
 	push(newResult) {
 		const index = this.results.findIndex(result => result.testKey === newResult.testKey);
 		if (index > -1) {
-			this.results[index].status = this.results[index].status === 'FAIL'
-				? this.results[index].status
-				: newResult.status;
+			const oldResult = this.results[index];
+			if (oldResult.status !== 'FAIL') oldResult.status = newResult.status;
 		} else this.results.push(newResult);
 	}
 

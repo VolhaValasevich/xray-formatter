@@ -25,6 +25,7 @@ Feature: Feature
       | result |
       | passed |
       | failed |
+      | passed |
 
   Scenario: Test without any tags
     When passed step

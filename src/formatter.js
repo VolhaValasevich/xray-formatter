@@ -25,13 +25,14 @@ class JiraFormatter extends Formatter {
 
 	async finishTest(testCase) {
 		const test = new TestCase(this.eventDataCollector.getTestCaseAttempt(testCase.testCaseStartedId));
-		const jiraId = test.getJiraId(this.tagRegexp);
-		if (jiraId && !test.willBeRetried()) {
-			const result = {
-				testKey: jiraId,
-				status: test.getStatus()
-			}
-			this.results.push(result);
+		const testKey = test.getJiraId(this.tagRegexp);
+		if (testKey && !test.willBeRetried()) {
+			const status = test.getStatus();
+			this.results.push({
+				testKey,
+				status,
+				comment: `Status set by Automation: ${status}`
+			});
 		}
 	}
 
