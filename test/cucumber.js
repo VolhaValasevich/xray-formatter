@@ -38,5 +38,18 @@ module.exports = {
 				report: path.resolve('./test/xray.json')
 			}
 		}
+	},
+	uploadToJira: {
+		...common,
+		retry: 1,
+		formatOptions: {
+			jiraOptions: {
+				endpoint: 'http://localhost:8080',
+				token: 'NTgxMTYxOTc3NDk4OtGLxQbvlj5ZuoaMTgR6dZjOVnmb',
+				execution: 'PC-7',
+				regexp: /@jira\((.*)\)/,
+				report: path.resolve('./test/xray.json')
+			}
+		}
 	}
 }

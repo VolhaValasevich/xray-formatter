@@ -1,6 +1,7 @@
 const {Formatter} = require('@cucumber/cucumber');
 const TestCase = require('./testCase');
 const TestResults = require('./testResults');
+const JiraService = require('./jiraService');
 
 class JiraFormatter extends Formatter {
 
@@ -11,6 +12,11 @@ class JiraFormatter extends Formatter {
 		this.tagRegexp = jiraOptions.regexp;
 		this.xrayOutputPath = jiraOptions.report;
 		this.results = new TestResults();
+
+		if (jiraOptions.endpoint && jiraOptions.token && jiraOptions.execution) {
+			this.jiraService = new JiraService(jiraOptions.endpoint, jiraOptions.token);
+			this.execution = jiraOptions.execution;
+		}
 
 		options.eventBroadcaster.on('envelope', this.processEnvelope.bind(this));
 	}
@@ -28,11 +34,13 @@ class JiraFormatter extends Formatter {
 		const testKey = test.getJiraId(this.tagRegexp);
 		if (testKey && !test.willBeRetried()) {
 			const status = test.getStatus()
-			const result = {
-				testKey,
-				status
-			};
-			if (test.isOutline()) result.examples = [status];
+			const result = {testKey, status};
+			if (test.isOutline()) {
+				result.examples = [status];
+			}
+			if (this.execution) {
+				await this.jiraService.uploadExecutionResults(this.execution, [result]);
+			}
 			this.results.push(result);
 		}
 	}

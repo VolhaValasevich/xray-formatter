@@ -4,7 +4,7 @@
   "description": "jira formatter for cucumber framework",
   "main": "src/formatter.js",
   "scripts": {
-    "test": "cucumber-js --config test/cucumber.js"
+    "test": "cucumber-js --config test/cucumber.js --profile uploadToJira"
   },
   "repository": {
     "type": "git",
