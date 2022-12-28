@@ -14,7 +14,9 @@ class TestResults {
 	}
 
 	save(pathToFile) {
-		fs.writeFileSync(pathToFile, JSON.stringify(this.results));
+		fs.writeFileSync(pathToFile, JSON.stringify({
+			tests: this.results
+		}));
 	}
 }
 
