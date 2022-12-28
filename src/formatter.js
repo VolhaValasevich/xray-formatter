@@ -27,12 +27,13 @@ class JiraFormatter extends Formatter {
 		const test = new TestCase(this.eventDataCollector.getTestCaseAttempt(testCase.testCaseStartedId));
 		const testKey = test.getJiraId(this.tagRegexp);
 		if (testKey && !test.willBeRetried()) {
-			const status = test.getStatus();
-			this.results.push({
+			const status = test.getStatus()
+			const result = {
 				testKey,
-				status,
-				comment: `Status set by Automation: ${status}`
-			});
+				status
+			};
+			if (test.isOutline()) result.examples = [status];
+			this.results.push(result);
 		}
 	}
 

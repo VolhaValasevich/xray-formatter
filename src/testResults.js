@@ -5,12 +5,28 @@ class TestResults {
 		this.results = [];
 	}
 
+	findExistingResult(testKey) {
+		return this.results.find(result => result.testKey === testKey);
+	}
+
+	updateStatus(existingResult, newStatus) {
+		if (existingResult.status !== 'FAIL') existingResult.status = newStatus;
+	}
+
+	updateExamples(existingResult, newExamples) {
+		existingResult.examples = [...existingResult.examples, ...newExamples];
+	}
+
 	push(newResult) {
-		const index = this.results.findIndex(result => result.testKey === newResult.testKey);
-		if (index > -1) {
-			const oldResult = this.results[index];
-			if (oldResult.status !== 'FAIL') oldResult.status = newResult.status;
-		} else this.results.push(newResult);
+		const existingResult = this.findExistingResult(newResult.testKey);
+		if (existingResult) {
+			this.updateStatus(existingResult, newResult.status);
+			if (newResult.examples) {
+				this.updateExamples(existingResult, newResult.examples);
+			}
+		} else {
+			this.results.push(newResult);
+		}
 	}
 
 	save(pathToFile) {

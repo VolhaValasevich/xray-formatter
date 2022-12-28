@@ -17,6 +17,12 @@ class TestCase {
     willBeRetried() {
         return this.testResult.willBeRetried;
     }
+
+    isOutline() {
+        const id = this.testResult.pickle.astNodeIds[0];
+        const gherkinDoc = this.testResult.gherkinDocument.feature.children.find(item => item.scenario.id === id);
+        return gherkinDoc.scenario.keyword === 'Scenario Outline';
+    }
 }
 
 module.exports = TestCase;
