@@ -47,7 +47,7 @@ module.exports = {
 				endpoint: 'http://localhost:8080',
 				token: 'NTgxMTYxOTc3NDk4OtGLxQbvlj5ZuoaMTgR6dZjOVnmb',
 				execution: 'PC-7',
-				resetTests: '@jira(PC-1) or @jira(PC-2) or @jira(PC-3)',
+				resetTests: ["PC-1", "PC-2", "PC-3"],
 				regexp: /@jira\((\w+-\d+)\)/,
 				report: path.resolve('./test/xray.json')
 			}

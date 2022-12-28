@@ -23,7 +23,7 @@ class JiraFormatter extends Formatter {
 	}
 
 	async processEnvelope(envelope) {
-		if (envelope.testRunStarted && this.resetTests) {
+		if (envelope.testRunStarted) {
 			await this.resetTestStatuses();
 		} else if (envelope.testCaseFinished) {
 			await this.saveTestResult(envelope.testCaseFinished);
@@ -33,10 +33,8 @@ class JiraFormatter extends Formatter {
 	}
 
 	async resetTestStatuses() {
-		let tags = this.resetTests.match(new RegExp(this.tagRegexp.source, 'g'));
-		if (tags && tags.length > 0) {
-			tags = tags.map(tag => tag.match(this.tagRegexp)[1]);
-			await this.jiraService.uploadExecutionResults(this.execution, tags.map(tag => {
+		if (this.resetTests && this.resetTests.length > 0) {
+			await this.jiraService.uploadExecutionResults(this.execution, this.resetTests.map(tag => {
 				return {
 					testKey: tag,
 					status: `TODO`
