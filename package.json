@@ -2,9 +2,9 @@
   "name": "jira-formatter",
   "version": "1.0.0",
   "description": "jira formatter for cucumber framework",
-  "main": "src/formatter.js",
+  "main": "src/JiraFormatter.js",
   "scripts": {
-    "test": "cucumber-js --config test/cucumber.js --profile uploadToJira"
+    "test": "cucumber-js --config test/cucumber.js"
   },
   "repository": {
     "type": "git",

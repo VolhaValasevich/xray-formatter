@@ -30,9 +30,13 @@ class TestResults {
 	}
 
 	save(pathToFile) {
-		fs.writeFileSync(pathToFile, JSON.stringify({
-			tests: this.results
-		}));
+		try {
+			fs.writeFileSync(pathToFile, JSON.stringify({
+				tests: this.results
+			}));
+		} catch (e) {
+			console.error(`Couldn't save '${pathToFile}' file: ${e.message}`);
+		}
 	}
 }
 

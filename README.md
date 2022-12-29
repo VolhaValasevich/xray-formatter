@@ -8,7 +8,7 @@ Add the reporter configuration to your Cucumber config file.
 module.exports = {
   default: {
     format: [
-      './src/formatter.js',
+      './src/JiraFormatter.js',
     ],
     formatOptions: {
       jiraOptions: {

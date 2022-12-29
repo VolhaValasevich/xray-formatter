@@ -1,7 +1,7 @@
 const {Formatter} = require('@cucumber/cucumber');
-const TestCase = require('./testCase');
-const TestResults = require('./testResults');
-const JiraService = require('./jiraService');
+const TestCase = require('./TestCase');
+const TestResults = require('./TestResults');
+const JiraService = require('./JiraService');
 
 class JiraFormatter extends Formatter {
 

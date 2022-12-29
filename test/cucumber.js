@@ -5,7 +5,7 @@ const common = {
 	require: ['test/step-definitions/steps.js'],
 	format: [
 		'json:test/report.json',
-		'./src/formatter.js',
+		'./src/JiraFormatter.js:test/xray.json',
 	],
 	publishQuiet: true
 }
@@ -16,7 +16,7 @@ module.exports = {
 		formatOptions: {
 			jiraOptions: {
 				regexp: /@jira\((\w+-\d+)\)/,
-				report: path.resolve('./test/xray.json')
+				report: path.resolve('./test/report/xray.json')
 			}
 		}
 	},
