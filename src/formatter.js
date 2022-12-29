@@ -63,7 +63,9 @@ class JiraFormatter extends Formatter {
 	}
 
 	saveResultsToFile() {
-		this.results.save(this.xrayOutputPath);
+		if (this.xrayOutputPath) {
+			this.results.save(this.xrayOutputPath);
+		}
 	}
 
 }

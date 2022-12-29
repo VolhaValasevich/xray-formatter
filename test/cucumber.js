@@ -5,7 +5,7 @@ const common = {
 	require: ['test/step-definitions/steps.js'],
 	format: [
 		'json:test/report.json',
-		'./src/formatter.js:test/xray.json',
+		'./src/formatter.js',
 	],
 	publishQuiet: true
 }
@@ -47,8 +47,7 @@ module.exports = {
 				endpoint: 'http://localhost:8080',
 				token: 'NTgxMTYxOTc3NDk4OtGLxQbvlj5ZuoaMTgR6dZjOVnmb',
 				execution: 'PC-7',
-				resetTests: ["PC-1", "PC-2", "PC-3"],
-				regexp: /@jira\((\w+-\d+)\)/,
+				regexp: /(PC-\d+)/,
 				report: path.resolve('./test/xray.json')
 			}
 		}
