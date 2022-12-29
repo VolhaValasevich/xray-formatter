@@ -16,7 +16,7 @@ module.exports = {
 		formatOptions: {
 			jiraOptions: {
 				regexp: /@jira\((\w+-\d+)\)/,
-				report: path.resolve('./test/report/xray.json')
+				report: path.resolve('./test/xray.json')
 			}
 		}
 	},
