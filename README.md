@@ -34,4 +34,5 @@ module.exports = {
 | `execution`  | `string`   | `PC-7`                           | The ID of your Xray Test Execution.                                                                                   | Yes      |    
 | `resetTests` | `string[]` | `["PC-1", "PC-2", "PC-3"]`       | An array of tests which should be reset in 'TODO' status before the run.                                              | Yes      |
 | `report`     | `string`   | `./report/xray.json`             | Path to the file where the xray report will be saved.                                                                 | No       |
+| `pageLimit`  | `number`   | `100`                            | Max number of items returned by Xray API. Default is 200, set to another number if you have custom settings.          | Yes      |
 

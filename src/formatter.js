@@ -14,7 +14,7 @@ class JiraFormatter extends Formatter {
 		this.results = new TestResults();
 
 		if (jiraOptions.endpoint && jiraOptions.token && jiraOptions.execution) {
-			this.jiraService = new JiraService(jiraOptions.endpoint, jiraOptions.token);
+			this.jiraService = new JiraService(jiraOptions.endpoint, jiraOptions.token, jiraOptions.pageLimit);
 			this.execution = jiraOptions.execution;
 			this.resetTests = jiraOptions.resetTests;
 		}
@@ -54,8 +54,7 @@ class JiraFormatter extends Formatter {
 			}
 			this.results.push(result);
 			if (this.execution) {
-				const results = await this.jiraService.getAllTestsFromExecution(this.execution);
-				const existingResult = results.find(item => item.key === testKey);
+				const existingResult = await this.jiraService.getTestFromExecution(this.execution, testKey);
 				if (!existingResult || existingResult.status !== 'FAIL') {
 					await this.jiraService.uploadExecutionResults(this.execution, [result]);
 				}
