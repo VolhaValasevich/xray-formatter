@@ -8,7 +8,7 @@ Use this formatter if you use [Xray Jira plugin](https://www.getxray.app/test-ma
 To install the package, run:
 
 ```shell
-npm install @qavajs/html-formatter
+npm install xray-formatter
 ```
 
 Add the reporter configuration to your Cucumber config file.
