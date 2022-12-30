@@ -1,4 +1,4 @@
-# jira-formatter
+# xray-formatter
 
 This is a Xray formatter for Cucumber automation framework.
 Use this formatter if you use [Xray Jira plugin](https://www.getxray.app/test-management) for managing your automation test cases and running them via [Xray Test Executions](https://docs.getxray.app/display/XRAY620/Test+Execution). 

@@ -1,25 +1,27 @@
 {
-  "name": "jira-formatter",
+  "name": "xray-formatter",
   "version": "1.0.0",
-  "description": "jira formatter for cucumber framework",
+  "description": "jira xray formatter for cucumber framework",
   "main": "src/JiraFormatter.js",
   "scripts": {
     "test": "cucumber-js --config test/cucumber.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/VolhaValasevich/jira-formatter.git"
+    "url": "git+https://github.com/VolhaValasevich/xray-formatter.git"
   },
   "keywords": [
     "cucumber",
-    "formatter"
+    "formatter",
+    "jira",
+    "xray"
   ],
   "author": "Volha Valasevich",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/VolhaValasevich/jira-formatter/issues"
+    "url": "https://github.com/VolhaValasevich/xray-formatter/issues"
   },
-  "homepage": "https://github.com/VolhaValasevich/jira-formatter#readme",
+  "homepage": "https://github.com/VolhaValasevich/xray-formatter#readme",
   "dependencies": {
     "axios": "^1.2.1"
   },
