@@ -5,7 +5,7 @@ const common = {
 	require: ['test/step-definitions/steps.js'],
 	format: [
 		'json:test/report.json',
-		'./src/JiraFormatter.js:test/xray.json',
+		'./lib/JiraFormatter.js:test/xray.json',
 	],
 	publishQuiet: true
 }

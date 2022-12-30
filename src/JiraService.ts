@@ -1,7 +1,11 @@
-const axios = require('axios');
+import axios, {AxiosInstance} from 'axios';
+import {TestResult} from "./TestResults";
 
 class JiraService {
-	constructor(baseUrl, token, pageLimit = 200) {
+	client: AxiosInstance;
+	pageLimit: number;
+
+	constructor(baseUrl: string, token: string, pageLimit = 200) {
 		this.client = axios.create({
 			baseURL: baseUrl
 		});
@@ -9,18 +13,18 @@ class JiraService {
 		this.pageLimit = pageLimit;
 	}
 
-	async getTestFromExecution(id, testKey) {
+	async getTestFromExecution(id: string, testKey: string) {
 		try {
 			const response = await this.client.get(`rest/raven/1.0/testruns?testExecKey=${id}&testKey=${testKey}`)
 			return response.data[0];
-		} catch(err) {
+		} catch(err: any) {
 			console.error(`Error while getting ${testKey} test in ${id} execution: ${err.response.data || err.message}`)
 		}
 	}
 
-	async getAllTestsFromExecution(id) {
+	async getAllTestsFromExecution(id: string) {
 		try {
-			let allResults = [], page = 1, isLast = false;
+			let allResults: any[] = [], page = 1, isLast = false;
 			while (!isLast) {
 				const result = await this.client.get(`rest/raven/1.0/api/testexec/${id}/test?limit=${this.pageLimit}&page=${page}`);
 				allResults = [...allResults, ...result.data];
@@ -29,22 +33,22 @@ class JiraService {
 					: page++;
 			}
 			return allResults;
-		} catch (err) {
+		} catch (err: any) {
 			console.error(`Error while getting tests from ${id} execution: ${err.response.data || err.message}`);
 		}
 	}
 
-	async uploadExecutionResults(id, executionResults) {
+	async uploadExecutionResults(id: string, executionResults: TestResult[]) {
 		const data = {
 			testExecutionKey: id,
 			tests: executionResults
 		};
 		try {
 			await this.client.post('rest/raven/1.0/import/execution', data);
-		} catch(err) {
+		} catch(err: any) {
 			console.error(`Error while uploading results to ${id} execution: ${err.response.data || err.message}`)
 		}
 	}
 }
 
-module.exports = JiraService;
+export default JiraService;

@@ -1,23 +1,32 @@
-const fs = require('fs');
+import * as fs from 'fs';
 
-class TestResults {
+export interface TestResult {
+	testKey: string,
+	status: string,
+	examples?: string[]
+}
+
+export class TestResults {
+	results: TestResult[];
 	constructor() {
 		this.results = [];
 	}
 
-	findExistingResult(testKey) {
+	findExistingResult(testKey: string) {
 		return this.results.find(result => result.testKey === testKey);
 	}
 
-	updateStatus(existingResult, newStatus) {
+	updateStatus(existingResult: TestResult, newStatus: string) {
 		if (existingResult.status !== 'FAIL') existingResult.status = newStatus;
 	}
 
-	updateExamples(existingResult, newExamples) {
-		existingResult.examples = [...existingResult.examples, ...newExamples];
+	updateExamples(existingResult: TestResult, newExamples: string[]) {
+		if (existingResult.examples) {
+			existingResult.examples = [...existingResult.examples, ...newExamples];
+		} else existingResult.examples = newExamples;
 	}
 
-	push(newResult) {
+	push(newResult: TestResult) {
 		const existingResult = this.findExistingResult(newResult.testKey);
 		if (existingResult) {
 			this.updateStatus(existingResult, newResult.status);
@@ -29,15 +38,13 @@ class TestResults {
 		}
 	}
 
-	save(pathToFile) {
+	save(pathToFile: string) {
 		try {
 			fs.writeFileSync(pathToFile, JSON.stringify({
 				tests: this.results
 			}));
-		} catch (e) {
+		} catch (e: any) {
 			console.error(`Couldn't save '${pathToFile}' file: ${e.message}`);
 		}
 	}
 }
-
-module.exports = TestResults;
