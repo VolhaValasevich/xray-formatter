@@ -3,10 +3,17 @@
 This is a Xray formatter for Cucumber automation framework.
 Use this formatter if you use [Xray Jira plugin](https://www.getxray.app/test-management) for managing your automation test cases and running them via [Xray Test Executions](https://docs.getxray.app/display/XRAY620/Test+Execution). 
 
+## Installation
 
-## Usage
+To install the package, run:
+
+```shell
+npm install @qavajs/html-formatter
+```
 
 Add the reporter configuration to your Cucumber config file.
+
+## Usage
 
 For this reporter to work correctly, Cucumber tests need to have their unique Jira IDs saved in the tags.
 If the test has several Jira tags, only the first one will be used to save the result.
@@ -27,7 +34,7 @@ The results of the test run will be saved in a file, which can be manually impor
 module.exports = {
   default: {
     format: [
-      './src/JiraFormatter.js:reports/xray.json',
+      'xray-formatter:reports/xray.json',
     ],
     formatOptions: {
       jiraOptions: {
@@ -47,7 +54,7 @@ If you want to send the results to Xray Test Execution automatically, you need t
 module.exports = {
   default: {
     format: [
-      './src/JiraFormatter.js:reports/xray.json',
+      'xray-formatter:reports/xray.json',
     ],
     formatOptions: {
       jiraOptions: {
