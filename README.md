@@ -1,3 +1,4 @@
+[![npm version](https://badge.fury.io/js/xray-formatter.svg)](https://badge.fury.io/js/xray-formatter)
 # xray-formatter
 
 This is a Xray formatter for Cucumber automation framework.
