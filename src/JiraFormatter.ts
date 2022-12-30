@@ -60,7 +60,7 @@ class JiraFormatter extends Formatter {
         const testKey = test.getJiraId(this.tagRegexp);
         if (testKey && !test.willBeRetried()) {
             const status = test.getStatus()
-            const result : TestResult = {testKey, status};
+            const result: TestResult = {testKey, status};
             if (test.isOutline()) {
                 result.examples = [status];
             }

@@ -1,50 +1,51 @@
 import * as fs from 'fs';
 
 export interface TestResult {
-	testKey: string,
-	status: string,
-	examples?: string[]
+    testKey: string,
+    status: string,
+    examples?: string[]
 }
 
 export class TestResults {
-	results: TestResult[];
-	constructor() {
-		this.results = [];
-	}
+    results: TestResult[];
 
-	findExistingResult(testKey: string) {
-		return this.results.find(result => result.testKey === testKey);
-	}
+    constructor() {
+        this.results = [];
+    }
 
-	updateStatus(existingResult: TestResult, newStatus: string) {
-		if (existingResult.status !== 'FAIL') existingResult.status = newStatus;
-	}
+    findExistingResult(testKey: string) {
+        return this.results.find(result => result.testKey === testKey);
+    }
 
-	updateExamples(existingResult: TestResult, newExamples: string[]) {
-		if (existingResult.examples) {
-			existingResult.examples = [...existingResult.examples, ...newExamples];
-		} else existingResult.examples = newExamples;
-	}
+    updateStatus(existingResult: TestResult, newStatus: string) {
+        if (existingResult.status !== 'FAIL') existingResult.status = newStatus;
+    }
 
-	push(newResult: TestResult) {
-		const existingResult = this.findExistingResult(newResult.testKey);
-		if (existingResult) {
-			this.updateStatus(existingResult, newResult.status);
-			if (newResult.examples) {
-				this.updateExamples(existingResult, newResult.examples);
-			}
-		} else {
-			this.results.push(newResult);
-		}
-	}
+    updateExamples(existingResult: TestResult, newExamples: string[]) {
+        if (existingResult.examples) {
+            existingResult.examples = [...existingResult.examples, ...newExamples];
+        } else existingResult.examples = newExamples;
+    }
 
-	save(pathToFile: string) {
-		try {
-			fs.writeFileSync(pathToFile, JSON.stringify({
-				tests: this.results
-			}));
-		} catch (e: any) {
-			console.error(`Couldn't save '${pathToFile}' file: ${e.message}`);
-		}
-	}
+    push(newResult: TestResult) {
+        const existingResult = this.findExistingResult(newResult.testKey);
+        if (existingResult) {
+            this.updateStatus(existingResult, newResult.status);
+            if (newResult.examples) {
+                this.updateExamples(existingResult, newResult.examples);
+            }
+        } else {
+            this.results.push(newResult);
+        }
+    }
+
+    save(pathToFile: string) {
+        try {
+            fs.writeFileSync(pathToFile, JSON.stringify({
+                tests: this.results
+            }));
+        } catch (e: any) {
+            console.error(`Couldn't save '${pathToFile}' file: ${e.message}`);
+        }
+    }
 }
