@@ -13,12 +13,18 @@ class JiraService {
 		this.pageLimit = pageLimit;
 	}
 
+	errorMessage(err: any) {
+		if (err.response) {
+			return err.response.data.message || err.response.data.error || err.response.data;
+		} else return err.message;
+	}
+
 	async getTestFromExecution(id: string, testKey: string) {
 		try {
 			const response = await this.client.get(`rest/raven/1.0/testruns?testExecKey=${id}&testKey=${testKey}`)
 			return response.data[0];
 		} catch(err: any) {
-			console.error(`Error while getting ${testKey} test in ${id} execution: ${err.response.data || err.message}`)
+			console.error(`Error while getting ${testKey} test in ${id} execution: ${this.errorMessage(err)}`)
 		}
 	}
 
@@ -34,7 +40,7 @@ class JiraService {
 			}
 			return allResults;
 		} catch (err: any) {
-			console.error(`Error while getting tests from ${id} execution: ${err.response.data || err.message}`);
+			console.error(`Error while getting tests from ${id} execution: ${this.errorMessage(err)}`);
 		}
 	}
 
@@ -46,7 +52,7 @@ class JiraService {
 		try {
 			await this.client.post('rest/raven/1.0/import/execution', data);
 		} catch(err: any) {
-			console.error(`Error while uploading results to ${id} execution: ${err.response.data || err.message}`)
+			console.error(`Error while uploading results to ${id} execution: ${this.errorMessage(err)}`)
 		}
 	}
 }

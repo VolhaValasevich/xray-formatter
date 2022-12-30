@@ -16,6 +16,11 @@ class JiraFormatter extends Formatter {
         super(options);
         const jiraOptions = options.parsedArgvOptions.jiraOptions;
 
+        if (!jiraOptions)
+            throw new Error('You need to provide jiraOptions in Cucumber formatOptions. See README for more info.');
+        if (!jiraOptions.regexp || !jiraOptions.report)
+            throw new Error(`You need to provide regexp and report path in jiraOptions. See README for more info.`)
+
         this.tagRegexp = jiraOptions.regexp;
         this.xrayOutputPath = jiraOptions.report;
         this.results = new TestResults();
