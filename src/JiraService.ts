@@ -28,6 +28,22 @@ class JiraService {
         }
     }
 
+    async getAllTestsFromExecution(id: string) {
+        try {
+            let allResults: any[] = [], page = 1, isLast = false;
+            while (!isLast) {
+                const result = await this.client.get(`rest/raven/1.0/api/testexec/${id}/test?limit=${this.pageLimit}&page=${page}`);
+                allResults = [...allResults, ...result.data];
+                result.data.length < this.pageLimit
+                    ? isLast = true
+                    : page++;
+            }
+            return allResults;
+        } catch (err: any) {
+            console.error(`Error while getting tests from ${id} execution: ${this.errorMessage(err)}`);
+        }
+    }
+
     async uploadExecutionResults(id: string, executionResults: TestResult[]) {
         const data = {
             testExecutionKey: id,
