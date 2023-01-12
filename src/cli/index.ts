@@ -10,6 +10,7 @@ yargs.option('config', {
         coerce: (arg: string) => require(path.resolve(arg)),
     })
     .command(require('./extract'))
+    .command(require('./clear'))
     .help()
     .demandCommand(1, 'You need to pass a command.')
     .argv;
