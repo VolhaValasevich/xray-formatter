@@ -11,6 +11,7 @@ yargs.option('config', {
     })
     .command(require('./extract'))
     .command(require('./clear'))
+    .command(require('./upload'))
     .help()
     .demandCommand(1, 'You need to pass a command.')
     .argv;
