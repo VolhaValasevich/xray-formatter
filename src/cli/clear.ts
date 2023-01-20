@@ -1,9 +1,9 @@
-import JiraService from "../JiraService";
-import JiraConfig from "./JiraConfig";
+import JiraService from '../JiraService';
+import {JiraConfig} from './index';
 
 exports.command = 'clear';
 
-exports.describe = 'set all tests in a Xray execution in TODO status'
+exports.describe = 'set all tests in a Xray execution in TODO status';
 
 exports.builder = {
     execution: {
@@ -25,5 +25,5 @@ exports.handler = async (argv: { config: JiraConfig, execution: string }) => {
         }
     });
     await client.uploadExecutionResults(argv.execution, emptyResults);
-    console.log(`Tests in ${argv.execution} execution have been set in TODO status.`)
+    console.log(`Tests in ${argv.execution} execution have been set in TODO status.`);
 }

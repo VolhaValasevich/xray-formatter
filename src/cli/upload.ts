@@ -1,11 +1,11 @@
-import JiraService from "../JiraService";
-import JiraConfig from "./JiraConfig";
-import * as path from "path";
-import * as fs from "fs";
+import JiraService from '../JiraService';
+import {JiraConfig} from './index';
+import * as path from 'path';
+import * as fs from 'fs';
 
 exports.command = 'upload';
 
-exports.describe = 'upload results from an xray.json report to Jira'
+exports.describe = 'upload results from an xray.json report to Jira';
 
 exports.builder = {
     execution: {
@@ -28,7 +28,8 @@ exports.handler = async (argv: { config: JiraConfig, execution: string, path: st
         const client = new JiraService(argv.config.endpoint, argv.config.token);
         console.log(`Uploading results to "${argv.execution}" execution.`);
         const executionResults = require(argv.path).tests;
-        return client.uploadExecutionResults(argv.execution, executionResults);
+        await client.uploadExecutionResults(argv.execution, executionResults);
+        console.log(`Test results were uploaded to ${argv.execution} execution.`)
     } else {
         console.error(`File ${argv.path} doesn't exist!`);
     }
