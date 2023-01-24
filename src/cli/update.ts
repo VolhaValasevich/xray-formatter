@@ -2,6 +2,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as parser from 'gherkin-parse';
 import klawSync from 'klaw-sync';
+import * as cliProgress from 'cli-progress';
 import JiraService from "../JiraService";
 
 exports.command = 'update';
@@ -33,12 +34,17 @@ exports.handler = async (argv: { config: JiraConfig, path: string, regexp: RegEx
         const scenarios = features.map(feature => feature.children).flat();
 
         const client = new JiraService(argv.config.endpoint, argv.config.token);
+        const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+        progressBar.start(scenarios.length, 0);
         for (const scenario of scenarios) {
             let testKey;
             const tag = scenario.tags.find((tag: any) => argv.regexp.test(tag.name));
             if (tag) {
                 testKey = tag.name.match(argv.regexp)[1];
-            } else continue;
+            } else {
+                progressBar.increment();
+                continue;
+            }
 
             const data: any = {
                 fields: {}
@@ -55,7 +61,10 @@ exports.handler = async (argv: { config: JiraConfig, path: string, regexp: RegEx
             }, '');
 
             await client.updateTest(testKey, data);
+            progressBar.increment();
         }
+        progressBar.stop();
+        console.log('Tests were updated.');
     } else {
         console.error(`Path ${argv.path} doesn't exist!`);
     }

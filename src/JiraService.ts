@@ -58,7 +58,6 @@ class JiraService {
     async updateTest(id: string, data: any) {
         try {
             await this.client.put(`rest/api/2/issue/${id}`, data);
-            console.log(id);
         } catch (err) {
             console.error(`Error while updating test ${id}: ${err}`);
         }
