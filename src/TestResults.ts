@@ -1,12 +1,6 @@
 import * as fs from 'fs';
 
-export interface TestResult {
-    testKey: string,
-    status: string,
-    examples?: string[]
-}
-
-export class TestResults {
+export default class TestResults {
     results: TestResult[];
 
     constructor() {

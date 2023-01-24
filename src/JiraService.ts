@@ -1,5 +1,4 @@
 import axios, {AxiosInstance} from 'axios';
-import {TestResult} from "./TestResults";
 
 class JiraService {
     client: AxiosInstance;
@@ -28,6 +27,22 @@ class JiraService {
         }
     }
 
+    async getAllTestsFromExecution(id: string) {
+        try {
+            let allResults: any[] = [], page = 1, isLast = false;
+            while (!isLast) {
+                const result = await this.client.get(`rest/raven/1.0/api/testexec/${id}/test?limit=${this.pageLimit}&page=${page}`);
+                allResults = [...allResults, ...result.data];
+                result.data.length < this.pageLimit
+                    ? isLast = true
+                    : page++;
+            }
+            return allResults;
+        } catch (err: any) {
+            console.error(`Error while getting tests from ${id} execution: ${this.errorMessage(err)}`);
+        }
+    }
+
     async uploadExecutionResults(id: string, executionResults: TestResult[]) {
         const data = {
             testExecutionKey: id,
@@ -37,6 +52,14 @@ class JiraService {
             await this.client.post('rest/raven/1.0/import/execution', data);
         } catch (err: any) {
             console.error(`Error while uploading results to ${id} execution: ${this.errorMessage(err)}`)
+        }
+    }
+
+    async updateTest(id: string, data: any) {
+        try {
+            await this.client.put(`rest/api/2/issue/${id}`, data);
+        } catch (err) {
+            console.error(`Error while updating test ${id}: ${err}`);
         }
     }
 }

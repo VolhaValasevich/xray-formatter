@@ -1,11 +1,15 @@
 {
   "name": "xray-formatter",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "jira xray formatter for cucumber framework",
   "main": "lib/JiraFormatter.js",
   "scripts": {
     "build": "tsc",
+    "pretest": "npm run build",
     "test": "cucumber-js --config test/cucumber.js"
+  },
+  "bin": {
+    "jira-cli": "lib/index.js"
   },
   "repository": {
     "type": "git",
@@ -24,10 +28,16 @@
   },
   "homepage": "https://github.com/VolhaValasevich/xray-formatter#readme",
   "dependencies": {
-    "axios": "^1.2.1"
+    "axios": "^1.2.1",
+    "cli-progress": "^3.11.2",
+    "gherkin-parse": "^1.0.6",
+    "klaw-sync": "^6.0.0",
+    "yargs": "^17.6.2"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^8.9.1",
-    "@types/node": "^18.11.18"
+    "@types/klaw-sync": "^6.0.1",
+    "@types/node": "^18.11.18",
+    "@types/yargs": "^17.0.13"
   }
 }

@@ -1,7 +1,7 @@
 import {Formatter, IFormatterOptions} from '@cucumber/cucumber';
 import {Envelope, TestCaseFinished} from '@cucumber/messages';
 import TestCase from './TestCase';
-import {TestResult, TestResults} from './TestResults';
+import TestResults from './TestResults';
 import JiraService from './JiraService';
 
 class JiraFormatter extends Formatter {

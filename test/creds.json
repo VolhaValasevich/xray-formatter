@@ -1,0 +1,12 @@
+{
+  "endpoint": "http://localhost:8080",
+  "token": "NTgxMTYxOTc3NDk4OtGLxQbvlj5ZuoaMTgR6dZjOVnmb",
+  "customFields": {
+    "testTypeField": "customfield_10112",
+    "cucumberTypeId": "10001",
+    "scenarioTypeField": "customfield_10113",
+    "scenarioTypeId": "10003",
+    "scenarioOutlineTypeId": "10004",
+    "stepsField": "customfield_10114"
+  }
+}
