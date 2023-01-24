@@ -1,6 +1,6 @@
 {
   "name": "xray-formatter",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "jira xray formatter for cucumber framework",
   "main": "lib/JiraFormatter.js",
   "scripts": {
