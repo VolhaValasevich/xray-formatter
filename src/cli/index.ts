@@ -2,11 +2,6 @@
 import yargs from 'yargs';
 import path from 'path';
 
-export interface JiraConfig {
-    endpoint: string,
-    token: string
-}
-
 yargs.option('config', {
     alias: 'c',
     demandOption: true,

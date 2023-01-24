@@ -29,6 +29,9 @@
   "homepage": "https://github.com/VolhaValasevich/xray-formatter#readme",
   "dependencies": {
     "axios": "^1.2.1",
+    "cli-progress": "^3.11.2",
+    "gherkin-parse": "^1.0.6",
+    "klaw-sync": "^6.0.0",
     "yargs": "^17.6.2"
   },
   "devDependencies": {

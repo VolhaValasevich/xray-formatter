@@ -1,5 +1,4 @@
 import axios, {AxiosInstance} from 'axios';
-import {TestResult} from "./TestResults";
 
 class JiraService {
     client: AxiosInstance;

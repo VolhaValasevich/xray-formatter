@@ -1,5 +1,4 @@
 import JiraService from '../JiraService';
-import {JiraConfig} from './index';
 import * as path from 'path';
 import * as fs from 'fs';
 

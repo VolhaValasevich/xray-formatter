@@ -1,5 +1,4 @@
 import JiraService from '../JiraService';
-import {JiraConfig} from './index';
 
 exports.command = 'clear';
 
