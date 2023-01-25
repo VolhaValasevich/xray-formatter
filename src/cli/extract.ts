@@ -37,7 +37,7 @@ const parseTests = async (argv: any) => {
         allTests = await client.getAllTestsFromExecution(argv.execution);
         if (!allTests) throw new Error(`Failed to get results from ${argv.execution} execution.`);
     } else if (argv.report) {
-        allTests = require(argv.path).tests;
+        allTests = require(argv.report).tests;
         if (!allTests) throw new Error(`Failed to get results from ${argv.report} file.`);
     } else throw new Error('Either execution or path to xray report should be provided.')
 
@@ -51,5 +51,7 @@ const parseTests = async (argv: any) => {
     }
 }
 
-parseTests(argv).then(() => console.log(`Tags were saved in ${argv.path}`));
+parseTests(argv)
+    .then(() => console.log(`Tags were saved in ${argv.path}`))
+    .catch(console.error);
 

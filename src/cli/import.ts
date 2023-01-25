@@ -53,7 +53,7 @@ if (fs.existsSync(argv.path)) {
         }, '');
         promises.push(client.updateTest(testKey, data));
     }
-    Promise.all(promises).then(() => console.log('Tests were updated.'));
+    Promise.all(promises).then(() => console.log('Tests were updated.')).catch(console.error);
 } else {
     console.error(`Path ${argv.path} doesn't exist!`);
 }

@@ -24,7 +24,9 @@ if (fs.existsSync(argv.path)) {
     const client = new JiraService(argv.config.endpoint, argv.config.token);
     console.log(`Uploading results to "${argv.execution}" execution.`);
     const executionResults = require(argv.path).tests;
-    client.uploadExecutionResults(argv.execution, executionResults).then(() => console.log(`Test results were uploaded to ${argv.execution} execution.`))
+    client.uploadExecutionResults(argv.execution, executionResults)
+        .then(() => console.log(`Test results were uploaded to ${argv.execution} execution.`))
+        .catch(console.error);
 } else {
     console.error(`File ${argv.path} doesn't exist!`);
 }

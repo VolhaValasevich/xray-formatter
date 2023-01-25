@@ -21,5 +21,7 @@ client.getAllTestsFromExecution(argv.execution).then(allTests => {
         }
     });
     return client.uploadExecutionResults(argv.execution, emptyResults);
-}).then(() => console.log(`Tests in ${argv.execution} execution have been set in TODO status.`));
+})
+    .then(() => console.log(`Tests in ${argv.execution} execution have been set in TODO status.`))
+    .catch(console.error);
 
