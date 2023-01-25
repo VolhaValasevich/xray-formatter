@@ -5,9 +5,9 @@ import klawSync from 'klaw-sync';
 import * as cliProgress from 'cli-progress';
 import JiraService from "../JiraService";
 
-exports.command = 'update';
+exports.command = 'import';
 
-exports.describe = 'update steps in Jira scenarios based on feature files';
+exports.describe = 'import steps in Jira scenarios based on feature files';
 
 exports.builder = {
     path: {

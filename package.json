@@ -9,7 +9,10 @@
     "test": "cucumber-js --config test/cucumber.js"
   },
   "bin": {
-    "jira-cli": "lib/index.js"
+    "xray-extract": "lib/index.js extract",
+    "xray-clear": "lib/index.js clear",
+    "xray-upload": "lib/index.js upload",
+    "xray-import": "lib/index.js import"
   },
   "repository": {
     "type": "git",
