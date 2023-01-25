@@ -18,7 +18,10 @@ const argv: any = yargs((process.argv.slice(2))).option('config', config)
         demandOption: true,
         desc: 'Path to xray.json',
         coerce: (arg: string) => path.resolve(arg)
-    }).argv;
+    }).example(
+        'xray-upload --config ./xray.config.json --path ./report/xray.json --execution PC-1',
+        'upload test results from xray.json file to the execution'
+    ).argv;
 
 if (fs.existsSync(argv.path)) {
     const client = new JiraService(argv.config.endpoint, argv.config.token);

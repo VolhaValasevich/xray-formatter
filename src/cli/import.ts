@@ -20,9 +20,16 @@ const argv: any = yargs((process.argv.slice(2))).option('config', config)
         type: 'string',
         desc: 'Regular expression for getting a test\'s Jira ID from its tags. The first capturing group should return the ID.',
         coerce: (arg: string) => new RegExp(arg)
-    }).argv;
+    }).example(
+        'xray-import --config ./xray.config.json --path ./features/ --regexp "(PC-\\d+|DP-\\d+)"',
+        'upload steps from feature files to jira scenarios'
+    ).argv;
 
-if (fs.existsSync(argv.path)) {
+if (!argv.config.customFields) {
+    console.error('You need to provide customFields in the xray config file. See README for more info.');
+} else if (!fs.existsSync(argv.path)) {
+    console.error(`Path ${argv.path} doesn't exist!`);
+} else {
     const featureFiles = klawSync(argv.path, {
         nodir: true
     }).map(item => item.path).filter(path => path.endsWith('.feature'));
@@ -54,6 +61,4 @@ if (fs.existsSync(argv.path)) {
         promises.push(client.updateTest(testKey, data));
     }
     Promise.all(promises).then(() => console.log('Tests were updated.')).catch(console.error);
-} else {
-    console.error(`Path ${argv.path} doesn't exist!`);
 }

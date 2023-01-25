@@ -9,7 +9,11 @@ const argv: any = yargs((process.argv.slice(2))).option('config', config)
         demandOption: true,
         type: 'string',
         desc: 'Execution ID',
-    }).argv;
+    })
+    .example(
+        'xray-clear --config ./xray.config.json --execution PC-1',
+        'set all tests in the execution in TODO status'
+    ).argv;
 
 const client = new JiraService(argv.config.endpoint, argv.config.token);
 client.getAllTestsFromExecution(argv.execution).then(allTests => {

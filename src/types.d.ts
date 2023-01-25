@@ -3,7 +3,7 @@ declare module 'gherkin-parse';
 declare interface JiraConfig {
     endpoint: string,
     token: string,
-    customFields: CustomFields
+    customFields?: CustomFields
 }
 
 declare interface CustomFields {

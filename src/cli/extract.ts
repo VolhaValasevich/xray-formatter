@@ -28,7 +28,21 @@ const argv: any = yargs((process.argv.slice(2))).option('config', config)
         type: 'string',
         default: '@id',
         desc: 'format for saving Jira IDs in a tag string.'
-    }).argv;
+    }).conflicts(
+        'execution',
+        'report'
+    ).example(
+        'xray-extract --execution PC-1',
+        'save tags of failed tests from the execution'
+    ).example(
+        'xray-extract --report ./report/xray.json',
+        'save tags of failed tests from xray.json'
+    ).example(
+        'xray-extract --execution PC-1 --format @jira(id)',
+        'save tags of failed tests in [@jira(id1) or @jira(id2)] format'
+    )
+    .help()
+    .argv;
 
 const parseTests = async (argv: any) => {
     let allTests;
