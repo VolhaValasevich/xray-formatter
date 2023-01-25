@@ -4,7 +4,7 @@ import yargs from "yargs";
 const config : yargs.Options = {
     alias: 'c',
     demandOption: true,
-    default: './xrayConfig.json',
+    default: './xray.config.json',
     type: 'string',
     desc: 'Path to your Jira config',
     coerce: (arg: string) => {
