@@ -1,8 +1,7 @@
-#! /usr/bin/env node
-import yargs from 'yargs';
 import path from 'path';
+import yargs from "yargs";
 
-yargs.option('config', {
+const config : yargs.Options = {
     alias: 'c',
     demandOption: true,
     default: './xrayConfig.json',
@@ -14,11 +13,7 @@ yargs.option('config', {
             throw new Error('Config file must contain your Jira endpoint and access token.');
         }
         return config;
-    },
-})
-    .command(require('./extract'))
-    .command(require('./clear'))
-    .command(require('./upload'))
-    .command(require('./import'))
-    .demandCommand(1, 'You need to pass a command.')
-    .argv;
+    }
+};
+
+export default config;

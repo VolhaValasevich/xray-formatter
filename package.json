@@ -9,10 +9,10 @@
     "test": "cucumber-js --config test/cucumber.js"
   },
   "bin": {
-    "xray-extract": "lib/index.js extract",
-    "xray-clear": "lib/index.js clear",
-    "xray-upload": "lib/index.js upload",
-    "xray-import": "lib/index.js import"
+    "xray-extract": "lib/cli/extract.js",
+    "xray-clear": "lib/cli/clear.js",
+    "xray-import": "lib/cli/import.js",
+    "xray-upload": "lib/cli/upload.js"
   },
   "repository": {
     "type": "git",
@@ -32,7 +32,6 @@
   "homepage": "https://github.com/VolhaValasevich/xray-formatter#readme",
   "dependencies": {
     "axios": "^1.2.1",
-    "cli-progress": "^3.11.2",
     "gherkin-parse": "^1.0.6",
     "klaw-sync": "^6.0.0",
     "yargs": "^17.6.2"

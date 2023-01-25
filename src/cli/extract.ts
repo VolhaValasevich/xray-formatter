@@ -1,36 +1,31 @@
-import JiraService from '../JiraService';
+#! /usr/bin/env node
 import * as path from 'path';
 import * as fs from 'fs';
+import yargs from 'yargs';
+import JiraService from '../JiraService';
+import config from './config';
 
-exports.command = 'extract';
-
-exports.describe = 'extract tags of non-passed tests from an Xray execution';
-
-exports.builder = {
-    execution: {
+const argv: any = yargs((process.argv.slice(2))).option('config', config)
+    .option('execution', {
         alias: 'e',
         demandOption: true,
         type: 'string',
         desc: 'Execution ID',
-    },
-    path: {
+    }).option('path', {
         alias: 'p',
         type: 'string',
         default: './tags.txt',
         desc: 'Path to file for saving the tag string.',
         coerce: (arg: string) => path.resolve(arg)
-    },
-    format: {
+    }).option('format', {
         alias: 'f',
         type: 'string',
         default: '@id',
         desc: 'format for saving Jira IDs in a tag string.'
-    }
-}
+    }).argv;
 
-exports.handler = async (argv: { config: JiraConfig, execution: string, path: string, format: string }) => {
-    const client = new JiraService(argv.config.endpoint, argv.config.token);
-    const allTests = await client.getAllTestsFromExecution(argv.execution);
+const client = new JiraService(argv.config.endpoint, argv.config.token);
+client.getAllTestsFromExecution(argv.execution).then(allTests => {
     if (!allTests) throw new Error(`Failed to get results from ${argv.execution} execution.`);
     const failedTests = allTests
         .filter(test => test.status !== 'PASS')
@@ -41,4 +36,5 @@ exports.handler = async (argv: { config: JiraConfig, execution: string, path: st
         fs.writeFileSync(argv.path, failedTests.join(' or '));
         console.log(`Tags were saved in ${argv.path}`);
     }
-}
+});
+
