@@ -1,35 +1,32 @@
+#! /usr/bin/env node
 import JiraService from '../JiraService';
 import * as path from 'path';
 import * as fs from 'fs';
+import yargs from 'yargs';
+import config from './config';
 
-exports.command = 'upload';
-
-exports.describe = 'upload results from an xray.json report to Jira';
-
-exports.builder = {
-    execution: {
+const argv: any = yargs((process.argv.slice(2))).option('config', config)
+    .option('execution', {
         alias: 'e',
         demandOption: true,
         type: 'string',
         desc: 'Execution ID',
-    },
-    path: {
+    })
+    .option('path', {
         alias: 'p',
         type: 'string',
         demandOption: true,
         desc: 'Path to xray.json',
         coerce: (arg: string) => path.resolve(arg)
-    }
-}
+    }).argv;
 
-exports.handler = async (argv: { config: JiraConfig, execution: string, path: string }) => {
-    if (fs.existsSync(argv.path)) {
-        const client = new JiraService(argv.config.endpoint, argv.config.token);
-        console.log(`Uploading results to "${argv.execution}" execution.`);
-        const executionResults = require(argv.path).tests;
-        await client.uploadExecutionResults(argv.execution, executionResults);
-        console.log(`Test results were uploaded to ${argv.execution} execution.`)
-    } else {
-        console.error(`File ${argv.path} doesn't exist!`);
-    }
+if (fs.existsSync(argv.path)) {
+    const client = new JiraService(argv.config.endpoint, argv.config.token);
+    console.log(`Uploading results to "${argv.execution}" execution.`);
+    const executionResults = require(argv.path).tests;
+    client.uploadExecutionResults(argv.execution, executionResults)
+        .then(() => console.log(`Test results were uploaded to ${argv.execution} execution.`))
+        .catch(console.error);
+} else {
+    console.error(`File ${argv.path} doesn't exist!`);
 }
