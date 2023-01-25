@@ -8,10 +8,16 @@ import config from './config';
 const argv: any = yargs((process.argv.slice(2))).option('config', config)
     .option('execution', {
         alias: 'e',
-        demandOption: true,
         type: 'string',
         desc: 'Execution ID',
-    }).option('path', {
+    })
+    .option('report', {
+        alias: 'r',
+        type: 'string',
+        desc: 'Path to your xray report',
+        coerce: (arg: string) => path.resolve(arg)
+    })
+    .option('path', {
         alias: 'p',
         type: 'string',
         default: './tags.txt',
@@ -24,17 +30,26 @@ const argv: any = yargs((process.argv.slice(2))).option('config', config)
         desc: 'format for saving Jira IDs in a tag string.'
     }).argv;
 
-const client = new JiraService(argv.config.endpoint, argv.config.token);
-client.getAllTestsFromExecution(argv.execution).then(allTests => {
-    if (!allTests) throw new Error(`Failed to get results from ${argv.execution} execution.`);
+const parseTests = async (argv: any) => {
+    let allTests;
+    if (argv.execution) {
+        const client = new JiraService(argv.config.endpoint, argv.config.token);
+        allTests = await client.getAllTestsFromExecution(argv.execution);
+        if (!allTests) throw new Error(`Failed to get results from ${argv.execution} execution.`);
+    } else if (argv.report) {
+        allTests = require(argv.path).tests;
+        if (!allTests) throw new Error(`Failed to get results from ${argv.report} file.`);
+    } else throw new Error('Either execution or path to xray report should be provided.')
+
     const failedTests = allTests
-        .filter(test => test.status !== 'PASS')
-        .map(test => argv.format.replace('id', test.key));
+        .filter((test: any) => test.status !== 'PASS')
+        .map((test: any) => argv.format.replace('id', test.key || test.testKey));
     if (failedTests.length === 0) {
-        console.log(`No failed or unexecuted tests found in ${argv.execution} execution.`);
+        console.log(`No failed or unexecuted tests were found.`);
     } else {
         fs.writeFileSync(argv.path, failedTests.join(' or '));
-        console.log(`Tags were saved in ${argv.path}`);
     }
-});
+}
+
+parseTests(argv).then(() => console.log(`Tags were saved in ${argv.path}`));
 
