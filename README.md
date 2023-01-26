@@ -49,17 +49,17 @@ see [docs](https://docs.getxray.app/display/XRAY620/Import+Execution+Results)).
 
 ```javascript
 module.exports = {
-	default: {
-		format: [
-			'xray-formatter:reports/xray.json',
-		],
-		formatOptions: {
-			jiraOptions: {
-				regexp: /(PC-\d+)/,
-				report: './reports/xray.json'
-			}
-		}
-	}
+  default: {
+    format: [
+      'xray-formatter:reports/xray.json',
+    ],
+    formatOptions: {
+      jiraOptions: {
+        regexp: /(PC-\d+)/,
+        report: './reports/xray.json'
+      }
+    }
+  }
 }
 ```
 
@@ -69,20 +69,20 @@ If you want to send the results to Xray Test Execution automatically, you need t
 
 ```javascript
 module.exports = {
-	default: {
-		format: [
-			'xray-formatter:reports/xray.json',
-		],
-		formatOptions: {
-			jiraOptions: {
-				endpoint: 'https://jira.company.com/jira/',
-				token: '123456789',
-				execution: 'PC-7',
-				regexp: /(PC-\d+)/,
-				report: './reports/xray.json',
-			}
-		}
-	}
+  default: {
+    format: [
+      'xray-formatter:reports/xray.json',
+    ],
+    formatOptions: {
+      jiraOptions: {
+        endpoint: 'https://jira.company.com/jira/',
+        token: '123456789',
+        execution: 'PC-7',
+        regexp: /(PC-\d+)/,
+        report: './reports/xray.json',
+      }
+    }
+  }
 }
 ```
 
