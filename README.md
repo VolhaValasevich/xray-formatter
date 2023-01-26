@@ -65,8 +65,7 @@ module.exports = {
 
 ### Send results to Jira
 
-If you want to send the results to Xray Test Execution automatically, you need to provide `endpoint`, `token`
-and `execution` options.
+If you want to send the results to Xray Test Execution automatically, you need to provide `endpoint`, `token` and `execution` options.
 
 ```javascript
 module.exports = {
