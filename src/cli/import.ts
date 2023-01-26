@@ -17,12 +17,20 @@ const argv: any = yargs((process.argv.slice(2))).option('config', config)
     })
     .option('regexp', {
         alias: 'r',
+        demandOption: true,
         type: 'string',
         desc: 'Regular expression for getting a test\'s Jira ID from its tags. The first capturing group should return the ID.',
         coerce: (arg: string) => new RegExp(arg)
+    }).option('tests', {
+        alias: 't',
+        type: 'array',
+        desc: 'IDs of tests that should be updated.',
     }).example(
-        'xray-import --config ./xray.config.json --path ./features/ --regexp "(PC-\\d+|DP-\\d+)"',
+        'xray-import --path ./features/ --regexp "(PC-\\d+|DP-\\d+)"',
         'upload steps from feature files to jira scenarios'
+    ).example(
+        'xray-import --path ./features/ --regexp "(PC-\\d+|DP-\\d+)" --tests PC-1 PC-2 PC-3',
+        'upload steps from certain tests to jira scenarios'
     ).argv;
 
 if (!argv.config.customFields) {
@@ -43,22 +51,22 @@ if (!argv.config.customFields) {
         const tag = scenario.tags.find((tag: any) => argv.regexp.test(tag.name));
         if (tag) {
             testKey = tag.name.match(argv.regexp)[1];
-        } else continue;
-
-        const data: any = {
-            fields: {}
-        };
-        data.fields[argv.config.customFields.testTypeField] = {
-            id: argv.config.customFields.cucumberTypeId
-        };
-        data.fields[argv.config.customFields.scenarioTypeField] = {};
-        data.fields[argv.config.customFields.scenarioTypeField].id = scenario.type === 'Scenario'
-            ? argv.config.customFields.scenarioTypeId
-            : argv.config.customFields.scenarioOutlineTypeId;
-        data.fields[argv.config.customFields.stepsField] = scenario.steps.reduce((scenario: string, step: any) => {
-            return scenario + `${step.keyword}${step.text}\n`;
-        }, '');
-        promises.push(client.updateTest(testKey, data));
+            if (argv.tags && !argv.tags.includes(testKey)) continue;
+            const data: any = {
+                fields: {}
+            };
+            data.fields[argv.config.customFields.testTypeField] = {
+                id: argv.config.customFields.cucumberTypeId
+            };
+            data.fields[argv.config.customFields.scenarioTypeField] = {};
+            data.fields[argv.config.customFields.scenarioTypeField].id = scenario.type === 'Scenario'
+                ? argv.config.customFields.scenarioTypeId
+                : argv.config.customFields.scenarioOutlineTypeId;
+            data.fields[argv.config.customFields.stepsField] = scenario.steps.reduce((scenario: string, step: any) => {
+                return scenario + `${step.keyword}${step.text}\n`;
+            }, '');
+            promises.push(client.updateTest(testKey, data));
+        }
     }
     Promise.all(promises).then(() => console.log('Tests were updated.')).catch(console.error);
 }

@@ -175,7 +175,7 @@ xray-extract --execution PC-1 --format "@jira(id)"
 ### xray-import
 
 ```shell
-xray-import --path ./features/ --regexp "(PC-\d+)"
+xray-import --path ./features/ --regexp "(PC-\d+) --tests PC-1 PC-2 PC-3"
 ```
 
 This command parses .feature files and updates steps in Jira scenarios with a corresponding ID.
@@ -201,3 +201,8 @@ These fields and values are unique for every Jira instance, and you can look the
   }
 }
 ```
+**Options:**
+
+1. ```path``` - path to your feature files.
+2. ```regexp``` - regular expression for getting a test's Jira ID from its tags..
+3. ```tests``` - (optional) IDs of tests that should be updated.
