@@ -1,5 +1,3 @@
-declare module 'gherkin-parse';
-
 declare interface JiraConfig {
     endpoint: string,
     token: string,

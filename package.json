@@ -1,6 +1,6 @@
 {
   "name": "xray-formatter",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "jira xray formatter for cucumber framework",
   "main": "lib/JiraFormatter.js",
   "scripts": {
@@ -32,7 +32,8 @@
   "homepage": "https://github.com/VolhaValasevich/xray-formatter#readme",
   "dependencies": {
     "axios": "^1.2.1",
-    "gherkin-parse": "^1.0.6",
+    "gherkin-formatter": "^1.1.0",
+    "gherking": "^2.3.0",
     "klaw-sync": "^6.0.0",
     "yargs": "^17.6.2"
   },

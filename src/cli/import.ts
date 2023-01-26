@@ -1,7 +1,8 @@
 #! /usr/bin/env node
 import * as path from 'path';
 import * as fs from 'fs';
-import * as parser from 'gherkin-parse';
+import * as parser from 'gherking';
+import {format} from 'gherkin-formatter';
 import klawSync from 'klaw-sync';
 import JiraService from '../JiraService';
 import config from './config';
@@ -37,8 +38,8 @@ const importScenarios = async (argv: any) => {
     const featureFiles = klawSync(argv.path, {
         nodir: true
     }).map(item => item.path).filter(path => path.endsWith('.feature'));
-    const features = featureFiles.map(path => parser.convertFeatureFileToJSON(path).feature);
-    const scenarios = features.map(feature => feature.children).flat();
+    const features = await Promise.all(featureFiles.map(path => parser.load(path)));
+    const scenarios: any[] = features.map(feature => feature[0].feature.elements).flat();
 
     const client = new JiraService(argv.config.endpoint, argv.config.token);
     for (const scenario of scenarios) {
@@ -57,16 +58,19 @@ const importScenarios = async (argv: any) => {
             data.fields[argv.config.customFields.scenarioTypeField].id = scenario.type === 'Scenario'
                 ? argv.config.customFields.scenarioTypeId
                 : argv.config.customFields.scenarioOutlineTypeId;
-            data.fields[argv.config.customFields.stepsField] = scenario.steps.reduce((scenario: string, step: any) => {
-                return scenario + `${step.keyword}${step.text}\n`;
-            }, '');
-            try {
-                await client.updateTest(testKey, data);
-            } catch (e) {
-                console.error(e);
-            }
+            data.fields[argv.config.customFields.stepsField] = formatSteps(scenario);
+            await client.updateTest(testKey, data);
         }
     }
+}
+
+const formatSteps = (scenario: any) => {
+    const feature: parser.Feature = new parser.Feature('Feature', 'Feature', 'Desc');
+    feature.elements.push(scenario);
+    const document: parser.Document = new parser.Document('feature', feature);
+    return format(document, {compact: true})
+        .split(scenario.name)[1]
+        .replace(/^\r\n/g, '');
 }
 
 if (!argv.config.customFields) {
