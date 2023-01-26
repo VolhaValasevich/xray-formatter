@@ -33,18 +33,13 @@ const argv: any = yargs((process.argv.slice(2))).option('config', config)
         'upload steps from certain tests to jira scenarios'
     ).argv;
 
-if (!argv.config.customFields) {
-    console.error('You need to provide customFields in the xray config file. See README for more info.');
-} else if (!fs.existsSync(argv.path)) {
-    console.error(`Path ${argv.path} doesn't exist!`);
-} else {
+const importScenarios = async (argv: any) => {
     const featureFiles = klawSync(argv.path, {
         nodir: true
     }).map(item => item.path).filter(path => path.endsWith('.feature'));
     const features = featureFiles.map(path => parser.convertFeatureFileToJSON(path).feature);
     const scenarios = features.map(feature => feature.children).flat();
 
-    const promises = [];
     const client = new JiraService(argv.config.endpoint, argv.config.token);
     for (const scenario of scenarios) {
         let testKey;
@@ -65,8 +60,19 @@ if (!argv.config.customFields) {
             data.fields[argv.config.customFields.stepsField] = scenario.steps.reduce((scenario: string, step: any) => {
                 return scenario + `${step.keyword}${step.text}\n`;
             }, '');
-            promises.push(client.updateTest(testKey, data));
+            try {
+                await client.updateTest(testKey, data);
+            } catch (e) {
+                console.error(e);
+            }
         }
     }
-    Promise.all(promises).then(() => console.log('Tests were updated.')).catch(console.error);
+}
+
+if (!argv.config.customFields) {
+    console.error('You need to provide customFields in the xray config file. See README for more info.');
+} else if (!fs.existsSync(argv.path)) {
+    console.error(`Path ${argv.path} doesn't exist!`);
+} else {
+    importScenarios(argv).then(() => console.log('Tests were updated.')).catch(console.error);
 }
