@@ -61,7 +61,7 @@ const parseTests = async (argv: any) => {
     if (failedTests.length === 0) {
         console.log(`No failed or unexecuted tests were found.`);
     } else {
-        fs.writeFileSync(argv.path, failedTests.join(' or '));
+        fs.writeFileSync(argv.path, `"( ${failedTests.join(' or ')} )"`);
     }
 }
 
