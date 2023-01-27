@@ -55,8 +55,20 @@ class JiraService {
         }
     }
 
-    async updateTest(id: string, data: any) {
+    async updateTest(id: string, type: string, steps: string, customFields: CustomFields) {
         try {
+            const data: any = {
+                fields: {}
+            };
+            data.fields[customFields.testTypeField] = {
+                id: customFields.cucumberTypeId
+            };
+            data.fields[customFields.scenarioTypeField] = {
+                id: type === 'Scenario'
+                    ? customFields.scenarioTypeId
+                    : customFields.scenarioOutlineTypeId
+            };
+            data.fields[customFields.stepsField] = steps;
             await this.client.put(`rest/api/2/issue/${id}`, data);
         } catch (err) {
             console.error(`Error while updating test ${id}: ${err}`);

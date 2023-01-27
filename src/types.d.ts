@@ -1,3 +1,5 @@
+declare module 'cli-progress';
+
 declare interface JiraConfig {
     endpoint: string,
     token: string,
