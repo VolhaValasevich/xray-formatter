@@ -70,7 +70,7 @@ const importScenarios = async (argv: any) => {
         if (tag) {
             testKey = tag.name.match(argv.regexp)![1];
             const steps = formatSteps(scenario);
-            await client.updateTest(testKey, scenario.type, steps, argv.config.customFields);
+            await client.updateTest(testKey, scenario.keyword, steps, argv.config.customFields);
             progressBar.increment();
         }
     }
