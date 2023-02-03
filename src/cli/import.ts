@@ -7,6 +7,7 @@ import {format} from 'gherkin-formatter';
 import klawSync from 'klaw-sync';
 import yargs from 'yargs';
 import JiraService from '../JiraService';
+import TableFormatter from '../TableFormatter';
 import config from './config';
 
 const argv: any = yargs((process.argv.slice(2))).option('config', config)
@@ -37,7 +38,11 @@ const readScenarios = async (path: string, tests?: string[], regexp?: RegExp) =>
     const featureFiles = klawSync(path, {nodir: true})
         .map(item => item.path)
         .filter(path => path.endsWith('.feature'));
-    const features = await Promise.all(featureFiles.map(path => parser.load(path)));
+    const features = await Promise.all(featureFiles.map(path => {
+        return parser.load(path).then(feature => {
+            return parser.process(feature[0], new TableFormatter());
+        });
+    }));
     const scenarios: any[] = features.map(feature => feature[0].feature.elements).flat();
     if (tests && regexp) {
         const filteredScenarios = [];
