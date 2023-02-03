@@ -1,11 +1,14 @@
 #! /usr/bin/env node
 import * as path from 'path';
 import * as fs from 'fs';
-import * as parser from 'gherkin-parse';
+import * as cliProgress from 'cli-progress';
+import * as parser from 'gherking';
+import {format} from 'gherkin-formatter';
 import klawSync from 'klaw-sync';
-import JiraService from '../JiraService';
-import config from './config';
 import yargs from 'yargs';
+import JiraService from '../JiraService';
+import TableFormatter from '../TableFormatter';
+import config from './config';
 
 const argv: any = yargs((process.argv.slice(2))).option('config', config)
     .option('path', {
@@ -25,48 +28,64 @@ const argv: any = yargs((process.argv.slice(2))).option('config', config)
         alias: 't',
         type: 'array',
         desc: 'IDs of tests that should be updated.',
-    }).example(
-        'xray-import --path ./features/ --regexp "(PC-\\d+|DP-\\d+)"',
-        'upload steps from feature files to jira scenarios'
-    ).example(
-        'xray-import --path ./features/ --regexp "(PC-\\d+|DP-\\d+)" --tests PC-1 PC-2 PC-3',
-        'upload steps from certain tests to jira scenarios'
-    ).argv;
+    }).argv;
+
+const getJiraTag = (scenario: parser.Scenario, regexp: RegExp) => {
+    return scenario.tags.find((tag: any) => regexp.test(tag.name));
+}
+
+const readScenarios = async (path: string, tests?: string[], regexp?: RegExp) => {
+    const featureFiles = klawSync(path, {nodir: true})
+        .map(item => item.path)
+        .filter(path => path.endsWith('.feature'));
+    const features = await Promise.all(featureFiles.map(path => {
+        return parser.load(path).then(feature => {
+            return parser.process(feature[0], new TableFormatter());
+        });
+    }));
+    const scenarios: any[] = features.map(feature => feature[0].feature.elements).flat();
+    if (tests && regexp) {
+        const filteredScenarios = [];
+        for (const id of tests) {
+            const foundScenario = scenarios.find(scenario => getJiraTag(scenario, regexp)!.name.includes(id));
+            if (foundScenario) filteredScenarios.push(foundScenario);
+            else console.error(`No test with ${id} tag found`);
+        }
+        return filteredScenarios;
+    } else return scenarios;
+}
+
+const formatSteps = (scenario: any) => {
+    const feature: parser.Feature = new parser.Feature('Feature', 'Feature', 'Desc');
+    feature.elements.push(scenario);
+    const document: parser.Document = new parser.Document('feature', feature);
+    return format(document, {compact: true})
+        .split(scenario.name)[1]
+        .replace(/^\r\n/g, '');
+}
+
+const importScenarios = async (argv: any) => {
+    const scenarios = await readScenarios(argv.path, argv.tests, argv.regexp);
+    const client = new JiraService(argv.config.endpoint, argv.config.token);
+    const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+    progressBar.start(scenarios.length, 0);
+    for (const scenario of scenarios) {
+        let testKey;
+        const tag = getJiraTag(scenario, argv.regexp);
+        if (tag) {
+            testKey = tag.name.match(argv.regexp)![1];
+            const steps = formatSteps(scenario);
+            await client.updateTest(testKey, scenario.keyword, steps, argv.config.customFields);
+            progressBar.increment();
+        }
+    }
+    progressBar.stop();
+}
 
 if (!argv.config.customFields) {
     console.error('You need to provide customFields in the xray config file. See README for more info.');
 } else if (!fs.existsSync(argv.path)) {
     console.error(`Path ${argv.path} doesn't exist!`);
 } else {
-    const featureFiles = klawSync(argv.path, {
-        nodir: true
-    }).map(item => item.path).filter(path => path.endsWith('.feature'));
-    const features = featureFiles.map(path => parser.convertFeatureFileToJSON(path).feature);
-    const scenarios = features.map(feature => feature.children).flat();
-
-    const promises = [];
-    const client = new JiraService(argv.config.endpoint, argv.config.token);
-    for (const scenario of scenarios) {
-        let testKey;
-        const tag = scenario.tags.find((tag: any) => argv.regexp.test(tag.name));
-        if (tag) {
-            testKey = tag.name.match(argv.regexp)[1];
-            if (argv.tags && !argv.tags.includes(testKey)) continue;
-            const data: any = {
-                fields: {}
-            };
-            data.fields[argv.config.customFields.testTypeField] = {
-                id: argv.config.customFields.cucumberTypeId
-            };
-            data.fields[argv.config.customFields.scenarioTypeField] = {};
-            data.fields[argv.config.customFields.scenarioTypeField].id = scenario.type === 'Scenario'
-                ? argv.config.customFields.scenarioTypeId
-                : argv.config.customFields.scenarioOutlineTypeId;
-            data.fields[argv.config.customFields.stepsField] = scenario.steps.reduce((scenario: string, step: any) => {
-                return scenario + `${step.keyword}${step.text}\n`;
-            }, '');
-            promises.push(client.updateTest(testKey, data));
-        }
-    }
-    Promise.all(promises).then(() => console.log('Tests were updated.')).catch(console.error);
+    importScenarios(argv).then(() => console.log('Tests were updated.')).catch(console.error);
 }
