@@ -23,7 +23,7 @@ class JiraService {
             const response = await this.client.get(`rest/raven/1.0/testruns?testExecKey=${id}&testKey=${testKey}`)
             return response.data[0];
         } catch (err: any) {
-            console.error(`Error while getting ${testKey} test in ${id} execution: ${this.errorMessage(err)}`)
+            return;
         }
     }
 
