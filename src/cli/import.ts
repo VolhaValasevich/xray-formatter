@@ -47,7 +47,10 @@ const readScenarios = async (path: string, tests?: string[], regexp?: RegExp) =>
     if (tests && regexp) {
         const filteredScenarios = [];
         for (const id of tests) {
-            const foundScenario = scenarios.find(scenario => getJiraTag(scenario, regexp)!.name.includes(id));
+            const foundScenario = scenarios.find(scenario => {
+                const tag = getJiraTag(scenario, regexp);
+                if (tag) return tag.name.includes(id);
+            });
             if (foundScenario) filteredScenarios.push(foundScenario);
             else console.error(`No test with ${id} tag found`);
         }
